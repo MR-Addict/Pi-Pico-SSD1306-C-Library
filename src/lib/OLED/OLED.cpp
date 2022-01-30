@@ -6,26 +6,6 @@
 #include "hardware/i2c.h"
 #include "pico/binary_info.h"
 
-OLED::OLED() {
-    // OLED object init
-    myFont = &Orbitron_Medium_16;
-
-    WIDTH = 128, HEIGHT = 64, PAGES = 8, BUFFERSIZE = 1024;
-    clear();
-    // i2c init
-    i2c_init(i2c_default, frequency);
-    gpio_set_function(PICO_DEFAULT_I2C_SDA_PIN, GPIO_FUNC_I2C);
-    gpio_set_function(PICO_DEFAULT_I2C_SCL_PIN, GPIO_FUNC_I2C);
-    gpio_pull_up(PICO_DEFAULT_I2C_SDA_PIN);
-    gpio_pull_up(PICO_DEFAULT_I2C_SCL_PIN);
-    bi_decl(bi_2pins_with_func(PICO_DEFAULT_I2C_SDA_PIN,
-                               PICO_DEFAULT_I2C_SCL_PIN, GPIO_FUNC_I2C));
-    // Display init
-    init();
-}
-
-OLED::~OLED() {}
-
 void OLED::write_cmd(uint8_t cmd) {
     uint8_t buff[] = {0x00, cmd};
     i2c_write_blocking(i2c_default, OLED_ADDRESS, buff, 2, false);
@@ -90,6 +70,26 @@ void OLED::init() {
     // Turn oled on
     write_cmd(SET_DISP | 0x01);
 }
+
+OLED::OLED() {
+    // OLED object init
+    myFont = &Orbitron_Medium_16;
+
+    WIDTH = 128, HEIGHT = 64, PAGES = 8, BUFFERSIZE = 1024;
+    clear();
+    // i2c init
+    i2c_init(i2c_default, frequency);
+    gpio_set_function(PICO_DEFAULT_I2C_SDA_PIN, GPIO_FUNC_I2C);
+    gpio_set_function(PICO_DEFAULT_I2C_SCL_PIN, GPIO_FUNC_I2C);
+    gpio_pull_up(PICO_DEFAULT_I2C_SDA_PIN);
+    gpio_pull_up(PICO_DEFAULT_I2C_SCL_PIN);
+    bi_decl(bi_2pins_with_func(PICO_DEFAULT_I2C_SDA_PIN,
+                               PICO_DEFAULT_I2C_SCL_PIN, GPIO_FUNC_I2C));
+    // Display init
+    init();
+}
+
+OLED::~OLED() {}
 
 void OLED::isDisplay(bool display) {
     write_cmd(SET_DISP | display);
