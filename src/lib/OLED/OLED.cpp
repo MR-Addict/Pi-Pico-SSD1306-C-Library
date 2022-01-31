@@ -2,18 +2,18 @@
 #include <cstring>
 
 #include "OLED.h"
-#include "font/Orbitron_Medium_16.h"
-#include "hardware/i2c.h"
-#include "pico/binary_info.h"
+#include "font/Dialog_bold_16.h"
 
 void OLED::write_cmd(uint8_t cmd) {
+    // 0x00 for write command
     uint8_t buff[] = {0x00, cmd};
-    i2c_write_blocking(i2c_default, OLED_ADDRESS, buff, 2, false);
+    i2c_write_blocking(I2C_PORT, OLED_ADDRESS, buff, 2, false);
 }
 
 void OLED::write_data(uint8_t data) {
+    // 0x40 for write data
     uint8_t buff[] = {0x40, data};
-    i2c_write_blocking(i2c_default, OLED_ADDRESS, buff, 2, false);
+    i2c_write_blocking(I2C_PORT, OLED_ADDRESS, buff, 2, false);
 }
 
 void OLED::swap(uint8_t* x1, uint8_t* x2) {
@@ -43,9 +43,12 @@ void OLED::init() {
     // Set display offset
     write_cmd(SET_DISP_OFFSET);
     write_cmd(0x00);
-    // set COM pins hardware configuration
+    // Set COM pins hardware configuration,0x12 for 12864,and 0x02 for 12832
     write_cmd(SET_COM_PIN_CFG);
-    write_cmd(0x12);
+    if (HEIGHT == 64)
+        write_cmd(0x12);
+    else if (HEIGHT == 32)
+        write_cmd(0x02);
     // Set display clock divide ratio
     write_cmd(SET_DISP_CLK_DIV);
     write_cmd(0x80);
@@ -71,20 +74,27 @@ void OLED::init() {
     write_cmd(SET_DISP | 0x01);
 }
 
-OLED::OLED() {
+OLED::OLED(uint8_t scl,
+           uint8_t sda,
+           uint8_t width,
+           uint8_t height,
+           uint32_t freq,
+           i2c_inst_t* i2c) {
     // OLED object init
-    myFont = &Orbitron_Medium_16;
 
-    WIDTH = 128, HEIGHT = 64, PAGES = 8, BUFFERSIZE = 1024;
+    WIDTH = width, HEIGHT = height;
+    PAGES = height / 8, BUFFERSIZE = width * PAGES;
+    OLED_SDA_PIN = sda, OLED_SCL_PIN = scl;
+    FREQUENCY = freq, I2C_PORT = i2c;
+    myFont = &Dialog_bold_16;
+
     clear();
     // i2c init
-    i2c_init(i2c_default, frequency);
-    gpio_set_function(PICO_DEFAULT_I2C_SDA_PIN, GPIO_FUNC_I2C);
-    gpio_set_function(PICO_DEFAULT_I2C_SCL_PIN, GPIO_FUNC_I2C);
-    gpio_pull_up(PICO_DEFAULT_I2C_SDA_PIN);
-    gpio_pull_up(PICO_DEFAULT_I2C_SCL_PIN);
-    bi_decl(bi_2pins_with_func(PICO_DEFAULT_I2C_SDA_PIN,
-                               PICO_DEFAULT_I2C_SCL_PIN, GPIO_FUNC_I2C));
+    i2c_init(I2C_PORT, FREQUENCY);
+    gpio_set_function(OLED_SDA_PIN, GPIO_FUNC_I2C);
+    gpio_set_function(OLED_SCL_PIN, GPIO_FUNC_I2C);
+    gpio_pull_up(OLED_SDA_PIN);
+    gpio_pull_up(OLED_SCL_PIN);
     // Display init
     init();
 }
@@ -111,6 +121,7 @@ void OLED::clear() {
 }
 
 void OLED::show() {
+    // Set col, row, and page address for sending data buffer
     write_cmd(SET_COL_ADDR);
     write_cmd(0);
     write_cmd(WIDTH - 1);
@@ -125,6 +136,18 @@ void OLED::show() {
 void OLED::drawPixel(uint8_t x, uint8_t y) {
     if (x < WIDTH && y < HEIGHT)
         BUFFER[x + WIDTH * (y / 8)] |= 0x01 << (y % 8);
+}
+
+void OLED::drawFastHLine(uint8_t x, uint8_t y, uint8_t width) {
+    for (uint8_t i = 0; i < width; i++) {
+        drawPixel(x + i, y);
+    }
+}
+
+void OLED::drawFastVLine(uint8_t x, uint8_t y, uint8_t height) {
+    for (uint8_t i = 0; i < height; i++) {
+        drawPixel(x, y + i);
+    }
 }
 
 void OLED::drawLine(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2) {
@@ -175,18 +198,19 @@ void OLED::drawFilledCircle(int16_t xc, int16_t yc, uint16_t r) {
 }
 
 void OLED::drawRectangle(uint8_t x, uint8_t y, uint8_t width, uint8_t height) {
-    drawLine(x, y, x + width, y);
-    drawLine(x, y + height, x + width, y + height);
-    drawLine(x, y, x, y + height);
-    drawLine(x + width, y, x + width, y + height);
+    drawFastHLine(x, y, width);
+    drawFastHLine(x, y + height - 1, width);
+    drawFastVLine(x, y, height);
+    drawFastVLine(x + width - 1, y, height);
 }
 
 void OLED::drawFilledRectangle(uint8_t x,
                                uint8_t y,
                                uint8_t width,
                                uint8_t height) {
-    for (uint8_t i = 0; i < height; i++)
-        drawLine(x, y + i, x + width, y + i);
+    for (uint8_t i = 0; i < height; i++) {
+        drawFastHLine(x, y, width);
+    }
 }
 
 void OLED::setScrollDir(bool direction) {

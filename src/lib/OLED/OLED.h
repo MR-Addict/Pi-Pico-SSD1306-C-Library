@@ -1,9 +1,8 @@
 #ifndef _OLED_H_
 #define _OLED_H_
 
+#include "hardware/i2c.h"
 #include "pico/stdlib.h"
-
-#define frequency (400 * 1000)
 
 #define OLED_ADDRESS 0x3C
 
@@ -46,6 +45,13 @@ struct GFXfont {
 
 class OLED {
    private:
+    uint32_t FREQUENCY;
+    i2c_inst_t* I2C_PORT;
+
+    // Pin Definition
+    uint8_t OLED_SDA_PIN;
+    uint8_t OLED_SCL_PIN;
+
     uint8_t WIDTH;
     uint8_t HEIGHT;
     uint8_t PAGES;
@@ -61,7 +67,12 @@ class OLED {
     void drawPixel(uint8_t x, uint8_t y);
 
    public:
-    OLED();
+    OLED(uint8_t scl,
+         uint8_t sda,
+         uint8_t width,
+         uint8_t height,
+         uint32_t freq,
+         i2c_inst_t* i2c);
     ~OLED();
     void show();
     void clear();
@@ -69,6 +80,8 @@ class OLED {
     void isInverse(bool inverse);
     void setContrast(uint8_t contrast);
 
+    void drawFastHLine(uint8_t x, uint8_t y, uint8_t width);
+    void drawFastVLine(uint8_t x, uint8_t y, uint8_t height);
     void drawLine(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2);
     void drawRectangle(uint8_t x, uint8_t y, uint8_t width, uint8_t height);
     void drawFilledRectangle(uint8_t x,

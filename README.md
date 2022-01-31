@@ -12,6 +12,8 @@ It's based on offical pi pico examples. If you are intersted in it, you can find
 |         void clear()         |    Make all data buffer to 0    |
 | void isDisplay(bool inverse) |  1 display on , 0 display off   |
 | void isInverse(bool inverse) |     1 inverse, 0 no inverse     |
+|     void drawFastHLine()     |    draw fast horizontal line    |
+|   void drawFastVertical()    |     draw fast vertical line     |
 |       void drawLine()        |  Draw any angle line you want   |
 |    void drawRectangle(）     |        Draw a rectangle         |
 |  void drawFilledRectanle()   |     Draw a filled rectangle     |
@@ -31,12 +33,13 @@ It's based on offical pi pico examples. If you are intersted in it, you can find
 #include "OLED.h"
 
 int main(){
-    OLED oled;
+    // SCL, SDA, Width, Height, Frequency, I2C Port
+    OLED oled(5, 4, 128, 64, 400000, i2c0);
     return 0;
 }
 ```
 
-Note that, in this library I use default I2C0 and default I2C pins which is `GPIO4-SDA` and `GPIO5-SCL`, you can edit in source file or connect oled use default pins.
+Note that, in this library I use default I2C0 and default I2C pins which is `GPIO4-SDA` and `GPIO5-SCL`, you can edit it or connect oled use default pins. We use recommand SSD1306 I2C max speed of 400KHz.
 
 ### 3.2 Draw some shapes
 
@@ -44,7 +47,8 @@ Note that, in this library I use default I2C0 and default I2C pins which is `GPI
 #include "OLED.h"
 
 int main(){
-    OLED oled;
+    // SCL, SDA, Width, Height, Frequency, I2C Port
+    OLED oled(5, 4, 128, 64, 400000, i2c0);
     // Rectangle
     oled.drawRectangle(0, 0, 50, 30);
     oled.drawFilledRectangle(5, 5, 40, 20);
@@ -57,9 +61,7 @@ int main(){
 }
 ```
 
-Note that you must call `show()` function after you finish draw shapes.
-
-So as print text or draw image, you need call `show` function too.
+Note that you must call `show()` function after you finish draw shapes. So as print text or draw image, you need call `show` function too.
 
 ### 3.3 Print text
 
@@ -68,7 +70,8 @@ So as print text or draw image, you need call `show` function too.
 #include "Cherry_Cream_Soda_Regular_16.h"
 
 int main(){
-    OLED oled;
+    // SCL, SDA, Width, Height, Frequency, I2C Port
+    OLED oled(5, 4, 128, 64, 400000, i2c0);
     //String 1 "Hello", use defaule font
     uint8_t string1[] = "Hello";
     oled.print(0, 38, string1);
@@ -85,7 +88,10 @@ int main(){
 
 This library is adafruit font supported, because it's really popular among makers.
 
-You can custom your own font through this website [SSD1306 Tools](http://oleddisplay.squix.ch/#/home) and modify some characters using this website [Adafruit GFX Font Customiser](https://tchapi.github.io/Adafruit-GFX-Font-Customiser/).
+You can custom your own font through this website [Font Genertor](http://oleddisplay.squix.ch/#/home).
+![Font Genertor](images/Font%20Generator.jpg)
+You can modify some characters using this website [Adafruit Font Customiser](https://tchapi.github.io/Adafruit-GFX-Font-Customiser/).
+![Adafruit Font Customiser](image/../images/Font%20Customiser.jpg)
 
 ### 3.4 Draw some images
 
@@ -94,7 +100,8 @@ You can custom your own font through this website [SSD1306 Tools](http://oleddis
 #include "bitmap.h"
 
 int main(){
-    OLED oled;
+    // SCL, SDA, Width, Height, Frequency, I2C Port
+    OLED oled(5, 4, 128, 64, 400000, i2c0);
     // Draw two images
     oled.drawBitmap(0, 0, 40, 32, pressure_40x32);
     oled.drawBitmap(45, 3, 32, 32, temperature_32x32);
