@@ -236,8 +236,12 @@ void OLED::printChar(uint8_t x, uint8_t y, uint8_t character) {
 void OLED::print(uint8_t x, uint8_t y, uint8_t* string) {
     for (uint8_t i = 0; string[i]; i++) {
         uint8_t character = string[i];
-        printChar(x, y, character);
         GFXglyph* glyph = myFont->glyph + character - myFont->first;
+        if (x + glyph->width + glyph->xOffset > WIDTH) {
+            x = 0;
+            y += myFont->yAdvance;
+        }
+        printChar(x, y, character);
         x += glyph->xAdvance;
     }
 }
