@@ -27,7 +27,26 @@ It's based on offical pi pico examples. If you are intersted in it, you can find
 |      void drawBitmap()       |          draw an image          |
 
 ## 3.Usage
-### 3.1 Declear a oled object
+
+### 3.0 File Structure
+
+If you want to use this library, your file structure should be like this:
+
+- **build**(build files, including .uf2 file)
+- **src**(source code folder)
+  - **lib**
+    - **OLED**(oled library)
+  - **bitmap.h**(for display images)
+  - **OLEDDISPLAY.cpp**(main programme)
+- **CMakeLists.txt**(for cmake)
+
+This repository does not have build folder, you need to cmake yourself.
+
+The main programme is at OLEDDISPLAY.cpp file.
+
+You may need to change CMakeLists.txt file according to your enviroment.
+
+### 3.1 Declear an oled object
 
 ```cpp
 #include "OLED.h"
@@ -39,7 +58,7 @@ int main(){
 }
 ```
 
-Note that, in this library I use default I2C0 and default I2C pins which is `GPIO4-SDA` and `GPIO5-SCL`, you can edit it or connect oled use default pins. We use recommand SSD1306 I2C max speed of 400KHz.
+Note that, in this library I use default I2C0 and default I2C pins which is `GPIO4-SDA` and `GPIO5-SCL`, you can change it using other default i2c pins. Here I use SSD1306 recommanded I2C max speed, **400KHz**.
 
 ### 3.2 Draw some shapes
 
