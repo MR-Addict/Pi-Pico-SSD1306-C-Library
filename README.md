@@ -28,7 +28,7 @@ It's based on offical pi pico examples. If you are intersted in it, you can find
 
 ## 3.Usage
 
-### 3.0 File Structure
+### 3.1 File Structure
 
 If you want to use this library, your file structure should be like this:
 
@@ -46,7 +46,7 @@ The main programme is at OLEDDISPLAY.cpp file.
 
 You may need to change CMakeLists.txt file according to your enviroment.
 
-### 3.1 Declear an oled object
+### 3.2 Declear an oled object
 
 ```cpp
 #include "OLED.h"
@@ -60,7 +60,7 @@ int main(){
 
 Note that, in this library I use default I2C0 and default I2C pins which is `GPIO4-SDA` and `GPIO5-SCL`, you can change it using other default i2c pins. Here I use SSD1306 recommanded I2C max speed, **400KHz**.
 
-### 3.2 Draw some shapes
+### 3.3 Draw some shapes
 
 ```cpp
 #include "OLED.h"
@@ -82,7 +82,7 @@ int main(){
 
 Note that you must call `show()` function after you finish draw shapes. So as print text or draw image, you need call `show` function too.
 
-### 3.3 Print text
+### 3.4 Print text
 
 ```cpp
 #include "OLED.h"
@@ -112,7 +112,7 @@ You can custom your own font through this website [Font Genertor](http://oleddis
 You can modify some characters using this website [Adafruit Font Customiser](https://tchapi.github.io/Adafruit-GFX-Font-Customiser/).
 ![Adafruit Font Customiser](image/../images/Font%20Customiser.jpg)
 
-### 3.4 Draw some images
+### 3.5 Draw some images
 
 ```cpp
 #include "OLED.h"
