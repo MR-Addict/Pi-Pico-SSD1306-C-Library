@@ -33,13 +33,23 @@ void OLED::init() {
     write_cmd(0x00);
     // Start line from 0
     write_cmd(SET_DISP_START_LINE);
+    write_cmd(0x00);
     // Set seg-map
-    write_cmd(SET_SEG_REMAP | 0x01);
+    if (reversed) {
+        write_cmd(SET_SEG_REMAP);
+    } else {
+        write_cmd(SET_SEG_REMAP | 0x01);
+    }
     // Set oled height
     write_cmd(SET_MUX_RATIO);
     write_cmd(HEIGHT - 1);
     // Set COM output scan directionscan from bottom up, COM[0] to COM[N-1]
-    write_cmd(SET_COM_OUT_DIR | 0x08);
+    if (reversed) {
+        write_cmd(SET_COM_OUT_DIR_REVERSE);
+    } else {
+        write_cmd(SET_COM_OUT_DIR);
+    }
+    
     // Set display offset
     write_cmd(SET_DISP_OFFSET);
     write_cmd(0x00);
@@ -79,6 +89,7 @@ OLED::OLED(uint8_t scl,
            uint8_t width,
            uint8_t height,
            uint32_t freq,
+           bool rev,
            i2c_inst_t* i2c) {
     // OLED object init
 
@@ -87,6 +98,7 @@ OLED::OLED(uint8_t scl,
     OLED_SDA_PIN = sda, OLED_SCL_PIN = scl;
     FREQUENCY = freq, I2C_PORT = i2c;
     myFont = &Dialog_bold_16;
+    reversed = rev;
 
     clear();
     // i2c init
@@ -128,6 +140,7 @@ void OLED::show() {
     write_cmd(SET_PAGE_ADDR);
     write_cmd(0);
     write_cmd(PAGES - 1);
+
     for (uint16_t i = 0; i < BUFFERSIZE; i++) {
         write_data(BUFFER[i]);
     }

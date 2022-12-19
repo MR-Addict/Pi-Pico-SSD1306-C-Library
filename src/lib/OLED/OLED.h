@@ -16,7 +16,7 @@
 #define SET_DISP_START_LINE 0x40
 #define SET_SEG_REMAP 0xA0
 #define SET_MUX_RATIO 0xA8
-#define SET_COM_OUT_DIR 0xC0
+#define SET_COM_OUT_DIR 0xC8
 #define SET_DISP_OFFSET 0xD3
 #define SET_COM_PIN_CFG 0xDA
 #define SET_DISP_CLK_DIV 0xD5
@@ -25,6 +25,7 @@
 #define SET_CHARGE_PUMP 0x8D
 #define SET_SCROLL 0x2E
 #define SET_HOR_SCROLL 0x26
+#define SET_COM_OUT_DIR_REVERSE 0xC0
 
 struct GFXglyph {
     uint16_t bitmapOffset;  ///< Pointer into GFXfont->bitmap
@@ -56,6 +57,7 @@ class OLED {
     uint8_t HEIGHT;
     uint8_t PAGES;
     uint16_t BUFFERSIZE;
+    bool reversed;
     uint8_t BUFFER[1024];
     const GFXfont* myFont;
 
@@ -72,6 +74,7 @@ class OLED {
          uint8_t width,
          uint8_t height,
          uint32_t freq,
+         bool reversed,
          i2c_inst_t* i2c);
     ~OLED();
     void show();
