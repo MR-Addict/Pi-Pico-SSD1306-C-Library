@@ -1,30 +1,33 @@
 # Pi Pico SSD1306 C++ Library
+
 ## 1. Description
+
 This is a C++ library for raspberry pi pico.
 
 It's based on offical pi pico examples. If you are interested in it, you can find it here [Pico Examples OLED I2C](https://github.com/raspberrypi/pico-examples/tree/master/i2c/oled_i2c).
-![Pi Pico and OLED](images/Pi%20Pico%20and%20OLED.jpg)
+![Pi Pico and OLED](images/Pi-Pico-and-OLED.jpg)
 
 ## 2.Function Lists
-|           Function           |          Introduction           |
-| :--------------------------: | :-----------------------------: |
-|         void show()          |  Send all data buffer to oled   |
-|         void clear()         |    Make all data buffer to 0    |
-| void isDisplay(bool inverse) |  1 display on , 0 display off   |
-| void isInverse(bool inverse) |     1 inverse, 0 no inverse     |
-|     void drawFastHLine()     |    draw fast horizontal line    |
-|   void drawFastVertical()    |     draw fast vertical line     |
-|       void drawLine()        |  Draw any angle line you want   |
-|    void drawRectangle(）     |        Draw a rectangle         |
-|  void drawFilledRectanle()   |     Draw a filled rectangle     |
-|      void drawCircle()       |          Draw a cicrle          |
-|   void drawFilledCircle()    |      Draw a filled circle       |
-|       void isScroll()        |       Turn on/off scroll        |
-|     void setScrollDir()      |  1 scroll right,0 scroll left   |
-|        void setFont()        | Set font, adafruit font support |
-|       void printChar()       |        print a character        |
-|         void print()         |         print a string          |
-|      void drawBitmap()       |          draw an image          |
+
+| Function                     | Introduction                    |
+| :--------------------------- | :------------------------------ |
+| void show()                  | Send all data buffer to oled    |
+| void clear()                 | Make all data buffer to 0       |
+| void isDisplay(bool inverse) | 1 display on , 0 display off    |
+| void isInverse(bool inverse) | 1 inverse, 0 no inverse         |
+| void drawFastHLine()         | draw fast horizontal line       |
+| void drawFastVertical()      | draw fast vertical line         |
+| void drawLine()              | Draw any angle line you want    |
+| void drawRectangle(）        | Draw a rectangle                |
+| void drawFilledRectanle()    | Draw a filled rectangle         |
+| void drawCircle()            | Draw a cicrle                   |
+| void drawFilledCircle()      | Draw a filled circle            |
+| void isScroll()              | Turn on/off scroll              |
+| void setScrollDir()          | 1 scroll right,0 scroll left    |
+| void setFont()               | Set font, adafruit font support |
+| void printChar()             | print a character               |
+| void print()                 | print a string                  |
+| void drawBitmap()            | draw an image                   |
 
 ## 3.Usage
 
@@ -44,7 +47,7 @@ This repository does not have build folder, you need to cmake yourself.
 
 The main programme is at OLEDDISPLAY.cpp file.
 
-You may need to change CMakeLists.txt file according to your enviroment.
+You may need to change CMakeLists.txt file according to your enviroment if needed.
 
 ### 3.2 Declare an oled object
 
@@ -58,7 +61,9 @@ int main(){
 }
 ```
 
-Note that, in this library I use default I2C0 and default I2C pins which is `GPIO4-SDA` and `GPIO5-SCL`, you can change it using other default i2c pins. Here I use SSD1306 recommanded I2C max speed, **400KHz**.
+Note that, in this library I use default I2C0 and default I2C pins which is `GPIO4-SDA` and `GPIO5-SCL`, but you can change it by other default i2c pins.
+
+And I use SSD1306 recommanded I2C max frequency, **400KHz**.
 
 The 6th parameter to the constructor call is whether the screen whould be upside-down or not. If true, the screen will be reversed.
 
@@ -107,12 +112,15 @@ int main(){
 }
 ```
 
-This library is adafruit font supported, because it's really popular among makers.
+This library is **adafruit font** supported, because it's really popular among makers.
 
-You can custom your own font through this website [Font Genertor](http://oleddisplay.squix.ch/#/home).
-![Font Genertor](images/Font%20Generator.jpg)
-You can modify some characters using this website [Adafruit Font Customiser](https://tchapi.github.io/Adafruit-GFX-Font-Customiser/).
-![Adafruit Font Customiser](image/../images/Font%20Customiser.jpg)
+You can custom your own font on [Font Genertor](http://oleddisplay.squix.ch/#/home) website.
+
+![Font Genertor](images/Font-Generator.jpg)
+
+And you can modify characters using this website [Adafruit Font Customiser](https://tchapi.github.io/Adafruit-GFX-Font-Customiser/).
+
+![Adafruit Font Customiser](images/Font-Customiser.jpg)
 
 ### 3.5 Draw some images
 
@@ -133,5 +141,9 @@ int main(){
 ```
 
 You should know that both font and image, the origin point is set at top left.
+
+## 4. LICENCE
+
+This project is based on [GNU General Public License v3.0](https://choosealicense.com/licenses/gpl-3.0/) licence, and you are free to use for your own purpose.
 
 That's all. Happy hacking.
