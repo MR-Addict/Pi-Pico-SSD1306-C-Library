@@ -2,7 +2,7 @@
 ## 1. Description
 This is a C++ library for raspberry pi pico.
 
-It's based on offical pi pico examples. If you are intersted in it, you can find it here [Pico Examples OLED I2C](https://github.com/raspberrypi/pico-examples/tree/master/i2c/oled_i2c).
+It's based on offical pi pico examples. If you are interested in it, you can find it here [Pico Examples OLED I2C](https://github.com/raspberrypi/pico-examples/tree/master/i2c/oled_i2c).
 ![Pi Pico and OLED](images/Pi%20Pico%20and%20OLED.jpg)
 
 ## 2.Function Lists
@@ -46,19 +46,21 @@ The main programme is at OLEDDISPLAY.cpp file.
 
 You may need to change CMakeLists.txt file according to your enviroment.
 
-### 3.2 Declear an oled object
+### 3.2 Declare an oled object
 
 ```cpp
 #include "OLED.h"
 
 int main(){
-    // SCL, SDA, Width, Height, Frequency, I2C Port
-    OLED oled(5, 4, 128, 64, 400000, i2c0);
+    // SCL, SDA, Width, Height, Frequency, Upside-down, I2C Port
+    OLED oled(5, 4, 128, 64, 400000, false, i2c0);
     return 0;
 }
 ```
 
 Note that, in this library I use default I2C0 and default I2C pins which is `GPIO4-SDA` and `GPIO5-SCL`, you can change it using other default i2c pins. Here I use SSD1306 recommanded I2C max speed, **400KHz**.
+
+The 6th parameter to the constructor call is whether the screen whould be upside-down or not. If true, the screen will be reversed.
 
 ### 3.3 Draw some shapes
 
@@ -66,8 +68,8 @@ Note that, in this library I use default I2C0 and default I2C pins which is `GPI
 #include "OLED.h"
 
 int main(){
-    // SCL, SDA, Width, Height, Frequency, I2C Port
-    OLED oled(5, 4, 128, 64, 400000, i2c0);
+    // SCL, SDA, Width, Height, Frequency, Upside-down, I2C Port
+    OLED oled(5, 4, 128, 64, 400000, false, i2c0);
     // Rectangle
     oled.drawRectangle(0, 0, 50, 30);
     oled.drawFilledRectangle(5, 5, 40, 20);
@@ -89,8 +91,8 @@ Note that you must call `show()` function after you finish draw shapes. So as pr
 #include "Cherry_Cream_Soda_Regular_16.h"
 
 int main(){
-    // SCL, SDA, Width, Height, Frequency, I2C Port
-    OLED oled(5, 4, 128, 64, 400000, i2c0);
+    // SCL, SDA, Width, Height, Frequency, Upside-down, I2C Port
+    OLED oled(5, 4, 128, 64, 400000, false, i2c0);
     //String 1 "Hello", use defaule font
     uint8_t string1[] = "Hello";
     oled.print(0, 38, string1);
